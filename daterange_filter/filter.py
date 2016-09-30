@@ -7,6 +7,7 @@ Has the filter that allows to filter by a date range.
 '''
 import datetime
 import django
+from copy import deepcopy
 from django import forms
 from django.contrib import admin
 from django.db import models
@@ -155,11 +156,11 @@ class DateRangeFilter(admin.filters.FieldListFilter):
         Pop the original parameters, and return the date filter & other filter
         parameters.
         """
-        
-        cl.params.pop(self.lookup_kwarg_since, None)
-        cl.params.pop(self.lookup_kwarg_upto, None)
+        hidden_params = deepcopy(cl.params)
+        hidden_params.pop(self.lookup_kwarg_since, None)
+        hidden_params.pop(self.lookup_kwarg_upto, None)
         return ({
-            'get_query': cl.params,
+            'get_query': hidden_params,
         }, )
 
     def expected_parameters(self):
